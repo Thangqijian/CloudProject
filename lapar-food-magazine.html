@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LAPAR. — Malaysian Food Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:      #1a1208;
+  --bg2:     #211809;
+  --cream:   #f2e8d5;
+  --cream2:  #e8d9bc;
+  --gold:    #c9943a;
+  --red:     #8b2a1a;
+  --muted:   #8a7560;
+  --border:  #2e2010;
+  --card:    #1f160a;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Karla', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ─── NAV ─── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 2.5rem;
+  height: 56px;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+.nav-links a {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cream); }
+
+.nav-logo {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+}
+
+.nav-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.2rem;
+}
+.nav-issue {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 4rem 2.5rem 3.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* decorative large text bg */
+.hero-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(10rem, 30vw, 28rem);
+  font-weight: 700;
+  font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201,148,58,0.07);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  animation: slowdrift 20s ease-in-out infinite alternate;
+}
+@keyframes slowdrift {
+  from { transform: translate(-52%, -50%) rotate(-2deg); }
+  to   { transform: translate(-48%, -50%) rotate(1deg); }
+}
+
+/* food emoji scatter */
+.scatter {
+  position: absolute;
+  font-size: 2.5rem;
+  opacity: 0;
+  animation: floatin 1s ease forwards;
+  pointer-events: none;
+}
+@keyframes floatin {
+  from { opacity: 0; transform: translateY(20px) rotate(-10deg); }
+  to   { opacity: 0.15; transform: translateY(0) rotate(0deg); }
+}
+
+.hero-kicker {
+  position: relative;
+  z-index: 1;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+
+.hero-title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  max-width: 900px;
+  animation: fadeUp 0.7s 0.25s ease both;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+.hero-desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 380px;
+}
+.hero-desc strong { color: var(--cream2); font-weight: 500; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── BUTTONS ─── */
+.btn {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.8rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  border: none;
+}
+.btn-gold {
+  background: var(--gold);
+  color: #1a1208;
+  font-weight: 500;
+}
+.btn-gold:hover { background: #d4a34a; transform: translateY(-1px); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--cream2);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ─── FILTER BAR ─── */
+.filter-bar {
+  padding: 1.2rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+  background: var(--bg2);
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+
+.filter-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-right: 0.5rem;
+}
+
+.filter-btn {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 0.45rem 1.1rem;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+}
+.filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+.filter-btn.active {
+  background: var(--gold);
+  color: #1a1208;
+  border-color: var(--gold);
+  font-weight: 500;
+}
+
+/* ─── MAIN GRID ─── */
+main {
+  padding: 3rem 2.5rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+
+/* card base */
+.food-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.food-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+/* card sizes */
+.card-hero  { grid-column: span 8; }
+.card-side  { grid-column: span 4; display: flex; flex-direction: column; }
+.card-third { grid-column: span 4; }
+.card-half  { grid-column: span 6; }
+
+/* card image placeholder — rich gradient fills */
+.card-img {
+  aspect-ratio: 16/10;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  flex-shrink: 0;
+}
+.card-hero .card-img { aspect-ratio: 16/9; font-size: 6rem; }
+.card-side .card-img { flex: 1; aspect-ratio: unset; min-height: 160px; }
+
+.card-img::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+}
+.img-nasi::before  { background: radial-gradient(ellipse at 40% 60%, #8b4513 0%, #3d1f0a 100%); }
+.img-mee::before   { background: radial-gradient(ellipse at 60% 40%, #c17f24 0%, #5c2e00 100%); }
+.img-roti::before  { background: radial-gradient(ellipse at 50% 70%, #d4a04a 0%, #7a3d00 100%); }
+.img-seafood::before { background: radial-gradient(ellipse at 30% 50%, #1a5276 0%, #0d1b2a 100%); }
+.img-kuih::before  { background: radial-gradient(ellipse at 70% 30%, #6b2d7e 0%, #1a0830 100%); }
+.img-bbq::before   { background: radial-gradient(ellipse at 50% 50%, #7b1e00 0%, #1a0800 100%); }
+.img-dessert::before { background: radial-gradient(ellipse at 50% 40%, #3d6b2e 0%, #0d1f08 100%); }
+
+.card-img-emoji {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+}
+
+/* hover shine on img */
+.card-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  z-index: 2;
+}
+
+.card-body { padding: 1.2rem 1.4rem 1.5rem; }
+.card-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+.card-hero .card-title {
+  font-size: 1.9rem;
+}
+.card-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+.card-author {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.card-like {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+}
+.card-like:hover { border-color: #e05; color: #e05; }
+.card-like.liked { background: rgba(238,0,85,0.1); border-color: #e05; color: #e05; }
+
+/* ─── SECTION HEADER ─── */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 3.5rem 0 2rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  font-style: italic;
+}
+.section-header a {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+}
+.section-header a:hover { text-decoration: underline; }
+
+/* ─── RANDOM PICKER ─── */
+.picker-section {
+  margin: 3rem 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.picker-label {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-style: italic;
+}
+.picker-label span { color: var(--gold); }
+
+.picker-result {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cream);
+  min-height: 2.5rem;
+  text-align: center;
+  transition: all 0.2s;
+  flex: 1;
+  text-align: center;
+}
+.picker-result.spin {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ─── NEWSLETTER STRIP ─── */
+.newsletter {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 3rem 2.5rem;
+  text-align: center;
+  margin: 2rem 0 0;
+  background: var(--bg2);
+}
+.newsletter h3 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+.newsletter p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.email-row {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.email-row input {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.email-row input:focus { border-color: var(--gold); }
+.email-row input::placeholder { color: var(--muted); }
+
+/* ─── FOOTER ─── */
+footer {
+  padding: 2rem 2.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+footer .f-logo {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--cream);
+}
+footer p {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .card-hero, .card-side, .card-third, .card-half { grid-column: span 12; }
+  .card-side { flex-direction: column; }
+  nav { grid-template-columns: auto 1fr; gap: 1rem; padding: 0 1.2rem; }
+  .nav-links { display: none; }
+  .nav-right .nav-issue { display: none; }
+  main { padding: 2rem 1.2rem; }
+  .filter-bar { padding: 0.9rem 1.2rem; }
+  .picker-section { flex-direction: column; text-align: center; }
+}
+
+/* no-results */
+.no-results {
+  grid-column: span 12;
+  text-align: center;
+  padding: 4rem;
+  display: none;
+}
+.no-results.show { display: block; }
+.no-results h3 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.no-results p { color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-links">
+    <a href="#">Recipes</a>
+    <a href="#">Places</a>
+    <a href="#">Stories</a>
+    <a href="#">Culture</a>
+  </div>
+  <div class="nav-logo">LAPAR.</div>
+  <div class="nav-right">
+    <span class="nav-issue">Vol. 01 · 2025</span>
+    <button class="btn btn-gold" style="padding:0.4rem 1rem;font-size:0.68rem;">Subscribe</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-ghost">Makan</div>
+
+  <div class="hero-kicker">Featured this week</div>
+  <h1 class="hero-title">
+    The <em>quiet perfection</em><br/>of a good bowl of<br/>Nasi Lemak.
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      We spent three mornings at <strong>Chow Kit Market</strong> trying to understand 
+      why some coconut rice hits different. This is what we found.
+    </p>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <button class="btn btn-gold">Read the story →</button>
+      <button class="btn btn-outline">See all features</button>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filter-bar">
+  <span class="filter-label">Browse:</span>
+  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+  <button class="filter-btn" onclick="filterCards('nasi', this)">🍚 Nasi</button>
+  <button class="filter-btn" onclick="filterCards('mee', this)">🍜 Mee & Soup</button>
+  <button class="filter-btn" onclick="filterCards('roti', this)">🫓 Roti & Bread</button>
+  <button class="filter-btn" onclick="filterCards('seafood', this)">🦐 Seafood</button>
+  <button class="filter-btn" onclick="filterCards('kuih', this)">🍡 Kuih</button>
+  <button class="filter-btn" onclick="filterCards('dessert', this)">🍧 Dessert</button>
+  <button class="filter-btn" onclick="filterCards('bbq', this)">🔥 Grill</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- ROW 1 -->
+  <div class="grid" id="cards-grid">
+
+    <div class="food-card card-hero reveal" data-category="nasi">
+      <div class="card-img img-nasi"><span class="card-img-emoji">🍛</span></div>
+      <div class="card-body">
+        <div class="card-tag">Nasi · Kuala Lumpur</div>
+        <div class="card-title">Nasi Lemak Bungkus: The Art of the Banana Leaf Wrap</div>
+        <div class="card-desc">There is a ritual to unwrapping a proper nasi lemak — the fold, the steam rising, the way the sambal stains the leaf. We traced this tradition back to its kampung roots.</div>
+        <div class="card-meta">
+          <span class="card-author">by Azrul Hakim · 8 min read</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 142</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-side reveal" data-category="mee">
+      <div class="card-img img-mee"><span class="card-img-emoji">🍜</span></div>
+      <div class="card-body">
+        <div class="card-tag">Mee · Penang</div>
+        <div class="card-title">Penang Char Kuey Teow at Midnight</div>
+        <div class="card-desc">The wok hei only comes alive after 10pm, they say. We tested that theory.</div>
+        <div class="card-meta">
+          <span class="card-author">by Siti Norhaliza</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 88</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-third reveal" data-category="roti">
+      <div class="card-img img-roti"><span class="card-img-emoji">🫓</span></div>
+      <div class="card-body">
+        <div class="card-tag">Roti · Mamak Culture</div>
+        <div class="card-title">Why Roti Canai Is Malaysia's Greatest Equaliser</div>
+        <div class="card-desc">RM1.50. Available everywhere. Eaten by everyone. No other food does this.</div>
+        <div class="card-meta">
+          <span class="card-author">by Farouk Z.</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 203</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-third reveal" data-category="seafood">
+      <div class="card-img img-seafood"><span class="card-img-emoji">🦐</span></div>
+      <div class="card-body">
+        <div class="card-tag">Seafood · Sabah</div>
+        <div class="card-title">Hinava: Sabah's Raw Fish That Converts Non-Believers</div>
+        <div class="card-desc">Cured in lime juice with ginger and bird's eye chili. One bite and you understand the whole coast.</div>
+        <div class="card-meta">
+          <span class="card-author">by Darren Mojikol</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 67</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-third reveal" data-category="kuih">
+      <div class="card-img img-kuih"><span class="card-img-emoji">🍡</span></div>
+      <div class="card-body">
+        <div class="card-tag">Kuih · Tradition</div>
+        <div class="card-title">Kuih Lapis: The Patient Art of Steaming Layer by Layer</div>
+        <div class="card-desc">Nine layers. Nine rounds of steaming. A grandmother's recipe nobody bothers to write down.</div>
+        <div class="card-meta">
+          <span class="card-author">by Mei Lin Chua</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 119</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-half reveal" data-category="bbq">
+      <div class="card-img img-bbq"><span class="card-img-emoji">🔥</span></div>
+      <div class="card-body">
+        <div class="card-tag">Grill · Satay</div>
+        <div class="card-title">Satay Kajang vs. Satay Haji Samuri: The Rivalry Nobody Admits Is Real</div>
+        <div class="card-desc">We bought 40 sticks from both places and ate them back-to-back on a Tuesday. For journalism.</div>
+        <div class="card-meta">
+          <span class="card-author">by Hazwan Rashid · 6 min read</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 311</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-half reveal" data-category="dessert">
+      <div class="card-img img-dessert"><span class="card-img-emoji">🍧</span></div>
+      <div class="card-body">
+        <div class="card-tag">Dessert · Cendol</div>
+        <div class="card-title">Cendol in the Rain: A Very Malaysian Experience</div>
+        <div class="card-desc">Ice dessert during a thunderstorm at a roadside stall. The logic makes no sense. The feeling makes perfect sense.</div>
+        <div class="card-meta">
+          <span class="card-author">by Priya Nair</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 177</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-third reveal" data-category="mee">
+      <div class="card-img img-mee" style="font-size:3.5rem;"><span class="card-img-emoji">🥣</span></div>
+      <div class="card-body">
+        <div class="card-tag">Mee · Ipoh</div>
+        <div class="card-title">Ipoh Hor Fun and the Beansprout Question</div>
+        <div class="card-desc">Blanched or raw? The debate rages on in every kopitiam in Perak.</div>
+        <div class="card-meta">
+          <span class="card-author">by Kelvin Ng</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 54</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-third reveal" data-category="nasi">
+      <div class="card-img img-nasi" style="font-size:3.5rem;"><span class="card-img-emoji">🍲</span></div>
+      <div class="card-body">
+        <div class="card-tag">Nasi · Kelantan</div>
+        <div class="card-title">Nasi Kerabu: The Blue Rice That Stops You Mid-Sentence</div>
+        <div class="card-desc">Dyed with butterfly pea flower, eaten cold, smells like the East Coast breeze.</div>
+        <div class="card-meta">
+          <span class="card-author">by Aisyah Wan</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 96</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card card-third reveal" data-category="kuih">
+      <div class="card-img img-kuih" style="font-size:3.5rem;"><span class="card-img-emoji">🟢</span></div>
+      <div class="card-body">
+        <div class="card-tag">Kuih · Pandan</div>
+        <div class="card-title">Everything Tastes Better with Pandan (We Tested This)</div>
+        <div class="card-desc">A slightly unscientific but very enjoyable investigation into Malaysia's favourite leaf.</div>
+        <div class="card-meta">
+          <span class="card-author">by Lapar Editors</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 258</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-results" id="no-results">
+      <h3>Kosong lah...</h3>
+      <p>Nothing here yet. Try a different category.</p>
+    </div>
+
+  </div>
+
+  <!-- RANDOM PICKER -->
+  <div class="picker-section reveal">
+    <div>
+      <div class="picker-label">Tak tahu nak makan <span>apa</span>?</div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-top:0.4rem;">Let us decide for you.</p>
+    </div>
+    <div class="picker-result" id="picker-result">—</div>
+    <button class="btn btn-gold" onclick="pickFood()">🎲 &nbsp;Surprise me</button>
+  </div>
+
+  <!-- SECTION: HIDDEN GEMS -->
+  <div class="section-header reveal">
+    <h2>Hidden Gems</h2>
+    <a href="#">See all spots →</a>
+  </div>
+
+  <div class="grid reveal">
+    <div class="food-card card-third" data-category="all">
+      <div class="card-img img-roti" style="aspect-ratio:4/3;font-size:3rem;"><span class="card-img-emoji">☕</span></div>
+      <div class="card-body">
+        <div class="card-tag">Kopitiam · Melaka</div>
+        <div class="card-title">Kedai Kopi Yong Suan, 1953</div>
+        <div class="card-desc">Still using the same charcoal toaster. Still the best kaya toast in the south.</div>
+        <div class="card-meta">
+          <span class="card-author">Tue–Sun, 6am–1pm</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 89</button>
+        </div>
+      </div>
+    </div>
+    <div class="food-card card-third" data-category="all">
+      <div class="card-img img-seafood" style="aspect-ratio:4/3;font-size:3rem;"><span class="card-img-emoji">🦀</span></div>
+      <div class="card-body">
+        <div class="card-tag">Seafood · Port Klang</div>
+        <div class="card-title">The Crab Stall Under the Bridge</div>
+        <div class="card-desc">No signboard. No menu. Just point at the tank and tell them how spicy.</div>
+        <div class="card-meta">
+          <span class="card-author">Fri–Sun, dinner only</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 134</button>
+        </div>
+      </div>
+    </div>
+    <div class="food-card card-third" data-category="all">
+      <div class="card-img img-dessert" style="aspect-ratio:4/3;font-size:3rem;"><span class="card-img-emoji">🧃</span></div>
+      <div class="card-body">
+        <div class="card-tag">Drinks · PJ</div>
+        <div class="card-title">Kedai Minuman Tan Brothers</div>
+        <div class="card-desc">Barley, cincau, and sugarcane fresh-pressed every hour. Third generation, same recipe.</div>
+        <div class="card-meta">
+          <span class="card-author">Daily, 8am–5pm</span>
+          <button class="card-like" onclick="toggleLike(this)"><span>♡</span> 71</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- NEWSLETTER -->
+<div class="newsletter reveal">
+  <h3>Stay hungry.</h3>
+  <p>New stories every Thursday. No spam, just good food writing.</p>
+  <div class="email-row">
+    <input type="email" placeholder="your@email.com" id="email-input"/>
+    <button class="btn btn-gold" onclick="subscribe()">Subscribe</button>
+  </div>
+  <p style="margin-top:0.75rem;font-size:0.65rem;letter-spacing:0.08em;color:var(--muted);" id="sub-msg"></p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">LAPAR.</div>
+  <p>Malaysian Food Stories &nbsp;·&nbsp; Est. 2025 &nbsp;·&nbsp; Kuala Lumpur</p>
+  <p style="font-size:0.65rem;">Made with 🍛 and too much teh tarik</p>
+</footer>
+
+<script>
+/* ─── SCROLL REVEAL ─── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+
+/* ─── FILTER ─── */
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('#cards-grid .food-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = cat === 'all' || card.dataset.category === cat;
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+
+  document.getElementById('no-results').classList.toggle('show', visible === 0);
+}
+
+/* ─── LIKE TOGGLE ─── */
+function toggleLike(btn) {
+  const liked = btn.classList.toggle('liked');
+  const heart = btn.querySelector('span');
+  const num = parseInt(btn.textContent.replace(/\D/g,''));
+  heart.textContent = liked ? '♥' : '♡';
+  btn.innerHTML = `<span>${liked ? '♥' : '♡'}</span> ${liked ? num + 1 : num - 1}`;
+  btn.classList.toggle('liked', liked);
+}
+
+/* ─── RANDOM FOOD PICKER ─── */
+const foods = [
+  'Nasi Lemak Bungkus 🍛', 'Char Kuey Teow 🍜', 'Roti Canai + Dhal 🫓',
+  'Satay Kajang 🍢', 'Cendol Gula Melaka 🍧', 'Nasi Kerabu 💙',
+  'Laksa Penang 🥣', 'Bak Kut Teh 🍲', 'Ikan Bakar 🐟',
+  'Kuih Lapis 🍡', 'Mee Goreng Mamak 🍝', 'Apam Balik 🥞',
+  'Claypot Chicken Rice 🍚', 'Asam Pedas Ikan 🌶️', 'Teh Tarik + Roti ☕',
+];
+function pickFood() {
+  const el = document.getElementById('picker-result');
+  el.classList.add('spin');
+  setTimeout(() => {
+    el.textContent = foods[Math.floor(Math.random() * foods.length)];
+    el.classList.remove('spin');
+  }, 200);
+}
+
+/* ─── SUBSCRIBE ─── */
+function subscribe() {
+  const val = document.getElementById('email-input').value.trim();
+  const msg = document.getElementById('sub-msg');
+  if (!val || !val.includes('@')) {
+    msg.style.color = '#e05';
+    msg.textContent = 'Please enter a valid email.';
+    return;
+  }
+  msg.style.color = 'var(--gold)';
+  msg.textContent = '✓ You\'re in. First issue lands Thursday.';
+  document.getElementById('email-input').value = '';
+}
+
+/* ─── SCATTER EMOJIS ─── */
+const emojis = ['🌶️','🥥','🍃','🌿','⭐','✦'];
+emojis.forEach((e, i) => {
+  const el = document.createElement('div');
+  el.classList.add('scatter');
+  el.textContent = e;
+  el.style.cssText = `top:${15 + Math.random()*60}%;left:${5 + Math.random()*85}%;animation-delay:${i*0.15}s;`;
+  document.querySelector('.hero').appendChild(el);
+});
+</script>
+</body>
+</html>
